@@ -252,6 +252,43 @@
       text-transform: uppercase;
     }
 
+    /* LIGHTBOX */
+    #lightbox {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(8,11,9,0.96);
+      align-items: center; justify-content: center;
+    }
+    #lightbox.open { display: flex; }
+    #lb-img {
+      max-width: 90vw; max-height: 85vh;
+      object-fit: contain; border-radius: 2px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+    #lb-close {
+      position: fixed; top: 24px; right: 32px;
+      background: none; border: none; color: var(--text);
+      font-size: 40px; cursor: pointer; line-height: 1; opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    #lb-close:hover { opacity: 1; }
+    #lb-prev, #lb-next {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.08); border: 1px solid var(--border);
+      color: var(--text); font-size: 24px; cursor: pointer;
+      width: 52px; height: 52px; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; opacity: 0.7;
+    }
+    #lb-prev:hover, #lb-next:hover { background: var(--green); opacity: 1; }
+    #lb-prev { left: 24px; }
+    #lb-next { right: 24px; }
+    #lb-counter {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-display); font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .lightbox-trigger { cursor: zoom-in; }
+
     /* FOOTER */
     footer {
       background: var(--off-black); border-top: 1px solid var(--border);
@@ -388,13 +425,6 @@
   -->
   <main class="work-grid" id="work-grid">
 
-    <!-- ADD YOUR ITEMS HERE -->
-    <div class="work-item work-item--wide" data-type="video">
-      <div class="video-wrap">
-        <iframe src="https://player.vimeo.com/video/1188421829?controls=1" allowfullscreen></iframe>
-      </div>
-    </div>
-
     <!-- PROJECT: UBER DUNES -->
     <div class="project-block">
       <div class="project-header">
@@ -403,14 +433,30 @@
         <p class="project-desc">Working with First &amp; Ten Productions we were brought in to capture high-end stills for the campaign launch. Shooting in the desert presents its own set of logistical challenges: shifting light, blowing sand, fast-moving vehicles. But that's exactly what makes it rewarding.</p>
       </div>
       <div class="project-grid">
-        <img src="uploads/Uber Dunes-155.jpg" alt="Couple posing in front of UberDunes Land Cruiser on desert dunes, UAE" loading="lazy" />
-        <img src="uploads/Uber Dunes-34.jpg" alt="UberDunes Land Cruiser drifting through desert sand, dust flying" loading="lazy" />
-        <img src="uploads/Uber Dunes-50.jpg" alt="Aerial view of UberDunes Land Cruiser carving through the desert dunes" loading="lazy" class="img-wide" />
-        <img src="uploads/Uber Dunes-211.jpg" alt="Couple laughing together in the back seat of UberDunes vehicle" loading="lazy" />
+        <img src="portfolio/Uber Dunes-161.jpg" alt="Couple posing in front of UberDunes Land Cruiser on desert dunes, UAE" loading="lazy" class="lightbox-trigger" />
+        <img src="portfolio/Uber Dunes-212 U.jpg" alt="UberDunes Land Cruiser drifting through desert sand, dust flying" loading="lazy" class="lightbox-trigger" />
+        <img src="portfolio/Uber Dunes-31.jpg" alt="Aerial view of UberDunes Land Cruiser carving through the desert dunes" loading="lazy" class="img-wide lightbox-trigger" />
+        <img src="portfolio/uberdunes-couple copy.jpg" alt="Couple laughing together in the back seat of UberDunes vehicle" loading="lazy" class="lightbox-trigger" />
+      </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="work-item work-item--wide" data-type="video">
+      <div class="video-wrap">
+        <iframe src="https://player.vimeo.com/video/1188421829?controls=1" allowfullscreen></iframe>
       </div>
     </div>
 
   </main>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image gallery">
+    <button id="lb-close" aria-label="Close">&times;</button>
+    <button id="lb-prev" aria-label="Previous">&#8592;</button>
+    <button id="lb-next" aria-label="Next">&#8594;</button>
+    <img id="lb-img" src="" alt="" />
+    <p id="lb-counter"></p>
+  </div>
 
   <!-- FOOTER -->
   <footer role="contentinfo">
@@ -491,6 +537,55 @@
           }
         });
       });
+    });
+  </script>
+
+  <script>
+    // Lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    const lbCounter = document.getElementById('lb-counter');
+    const triggers = Array.from(document.querySelectorAll('.lightbox-trigger'));
+    let current = 0;
+
+    function openLightbox(index) {
+      current = index;
+      lbImg.src = triggers[current].src;
+      lbImg.alt = triggers[current].alt;
+      lbCounter.textContent = (current + 1) + ' / ' + triggers.length;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function showPrev() {
+      current = (current - 1 + triggers.length) % triggers.length;
+      lbImg.src = triggers[current].src;
+      lbImg.alt = triggers[current].alt;
+      lbCounter.textContent = (current + 1) + ' / ' + triggers.length;
+    }
+
+    function showNext() {
+      current = (current + 1) % triggers.length;
+      lbImg.src = triggers[current].src;
+      lbImg.alt = triggers[current].alt;
+      lbCounter.textContent = (current + 1) + ' / ' + triggers.length;
+    }
+
+    triggers.forEach((img, i) => img.addEventListener('click', () => openLightbox(i)));
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+    document.getElementById('lb-prev').addEventListener('click', showPrev);
+    document.getElementById('lb-next').addEventListener('click', showNext);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
     });
   </script>
 
