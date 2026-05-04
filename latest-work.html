@@ -205,6 +205,45 @@
       color: var(--green-bright); white-space: nowrap;
     }
 
+    /* PROJECT BLOCK */
+    .project-block {
+      grid-column: span 2;
+      border-top: 1px solid var(--border);
+      padding-top: 48px;
+      margin-top: 16px;
+    }
+    .project-block:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+    .project-header { margin-bottom: 32px; }
+    .project-client {
+      font-family: var(--font-display); font-weight: 700; font-size: 11px;
+      letter-spacing: 3px; text-transform: uppercase; color: var(--green-bright);
+      margin-bottom: 10px;
+    }
+    .project-title {
+      font-family: var(--font-display); font-weight: 900;
+      font-size: clamp(36px, 5vw, 64px);
+      text-transform: uppercase; color: var(--text);
+      line-height: 0.95; margin-bottom: 16px;
+    }
+    .project-desc {
+      font-size: 15px; color: var(--muted); max-width: 640px; line-height: 1.7;
+    }
+    .project-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    .project-grid img {
+      width: 100%; height: 420px; object-fit: cover; display: block;
+      border-radius: 2px; transition: transform 0.4s;
+    }
+    .project-grid img:hover { transform: scale(1.02); }
+    .project-grid .img-wide { grid-column: span 2; height: 520px; }
+    @media (max-width: 768px) {
+      .project-block { grid-column: span 1; }
+      .project-grid { grid-template-columns: 1fr; }
+      .project-grid img { height: 280px; }
+      .project-grid .img-wide { grid-column: span 1; height: 280px; }
+    }
+
     /* EMPTY STATE */
     .empty-state {
       grid-column: span 2; text-align: center;
@@ -353,6 +392,21 @@
     <div class="work-item work-item--wide" data-type="video">
       <div class="video-wrap">
         <iframe src="https://player.vimeo.com/video/1188421829?controls=1" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- PROJECT: UBER DUNES -->
+    <div class="project-block">
+      <div class="project-header">
+        <p class="project-client">Uber Dunes — Campaign Photography</p>
+        <h2 class="project-title">Desert Campaign</h2>
+        <p class="project-desc">Working with First &amp; Ten Productions we were brought in to capture high-end stills for the campaign launch. Shooting in the desert presents its own set of logistical challenges: shifting light, blowing sand, fast-moving vehicles. But that's exactly what makes it rewarding.</p>
+      </div>
+      <div class="project-grid">
+        <img src="uploads/Uber Dunes-155.jpg" alt="Couple posing in front of UberDunes Land Cruiser on desert dunes, UAE" loading="lazy" />
+        <img src="uploads/Uber Dunes-34.jpg" alt="UberDunes Land Cruiser drifting through desert sand, dust flying" loading="lazy" />
+        <img src="uploads/Uber Dunes-50.jpg" alt="Aerial view of UberDunes Land Cruiser carving through the desert dunes" loading="lazy" class="img-wide" />
+        <img src="uploads/Uber Dunes-211.jpg" alt="Couple laughing together in the back seat of UberDunes vehicle" loading="lazy" />
       </div>
     </div>
 
