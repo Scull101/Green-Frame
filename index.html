@@ -550,16 +550,43 @@
       padding: 20px;
     }
     .portfolio-item:hover .portfolio-overlay { opacity: 1; }
-    .portfolio-tag {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--green-bright);
-      border: 1px solid var(--green);
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: rgba(8,11,9,0.5);
+    .portfolio-item { cursor: zoom-in; }
+
+    /* ── LIGHTBOX ── */
+    #portfolio-lightbox {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(8,11,9,0.97);
+      align-items: center; justify-content: center;
+    }
+    #portfolio-lightbox.open { display: flex; }
+    #plb-img {
+      max-width: 88vw; max-height: 86vh;
+      object-fit: contain; border-radius: 2px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      transition: opacity 0.2s;
+    }
+    #plb-close {
+      position: fixed; top: 24px; right: 32px;
+      background: none; border: none; color: var(--text);
+      font-size: 40px; cursor: pointer; line-height: 1; opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    #plb-close:hover { opacity: 1; }
+    #plb-prev, #plb-next {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.07); border: 1px solid var(--border);
+      color: var(--text); font-size: 22px; cursor: pointer;
+      width: 52px; height: 52px; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; opacity: 0.7;
+    }
+    #plb-prev:hover, #plb-next:hover { background: var(--green); opacity: 1; }
+    #plb-prev { left: 24px; }
+    #plb-next { right: 24px; }
+    #plb-counter {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-display); font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
     }
     @media (max-width: 1024px) {
       .portfolio-grid {
@@ -1301,36 +1328,45 @@
       <div class="portfolio-grid">
         <div class="portfolio-item portfolio-item--tall fade-up">
           <img src="portfolio/athlete-red.jpg" alt="Athlete portrait with dramatic red lighting" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Sport</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-1">
           <img src="portfolio/uber-dunes-action.jpg" alt="UberDunes Land Cruiser dune bashing in the UAE desert" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Commercial</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-2">
           <img src="portfolio/concert-purple.jpg" alt="Live concert photography with purple stage lighting" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Live Events</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item portfolio-item--wide fade-up fade-up-delay-1">
           <img src="portfolio/uberdunes-couple.jpg" alt="Couple on a desert dune adventure with Uber Dunes, UAE" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Brand Film</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-2">
           <img src="portfolio/football-blue.jpg" alt="Football athlete with ball balanced on head, blue studio lighting" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Sport</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-3">
           <img src="portfolio/mitsubishi-front.jpg" alt="Mitsubishi Outlander front grille close-up at golden hour" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Commercial</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-1">
           <img src="portfolio/hurling-portrait.jpg" alt="Sport portrait — hurling player in ATAK helmet" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Sport</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
         <div class="portfolio-item fade-up fade-up-delay-2">
           <img src="portfolio/fashion-station.jpg" alt="Fashion editorial at train station" loading="lazy" />
-          <div class="portfolio-overlay"><span class="portfolio-tag">Editorial</span></div>
+          <div class="portfolio-overlay"></div>
         </div>
+      </div>
+
+      <!-- GALLERY-ONLY IMAGES: visible in lightbox but not shown in the grid -->
+      <div id="gallery-extras" style="display:none;" aria-hidden="true">
+        <img data-gallery-src="portfolio/concert-lasers.jpg" data-gallery-alt="Live concert with laser lighting" />
+        <img data-gallery-src="portfolio/two-cars-sunset.jpg" data-gallery-alt="Two cars at sunset" />
+        <img data-gallery-src="portfolio/uberdunes-couple copy.jpg" data-gallery-alt="Couple with UberDunes, UAE desert" />
+        <!-- Add more hidden gallery images here in the same format -->
+      </div>
       </div>
     </div>
   </section>
@@ -1648,6 +1684,15 @@
     </div>
   </footer>
 
+  <!-- PORTFOLIO LIGHTBOX -->
+  <div id="portfolio-lightbox" role="dialog" aria-modal="true" aria-label="Image gallery">
+    <button id="plb-close" aria-label="Close">&times;</button>
+    <button id="plb-prev" aria-label="Previous">&#8592;</button>
+    <button id="plb-next" aria-label="Next">&#8594;</button>
+    <img id="plb-img" src="" alt="" />
+    <p id="plb-counter"></p>
+  </div>
+
   <script>
     // Nav scroll effect
     const nav = document.getElementById('main-nav');
@@ -1676,6 +1721,62 @@
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
   </script>
+  <script>
+    // Portfolio lightbox
+    (function () {
+      // Build gallery array: visible images first, then hidden extras
+      const visibleImgs = Array.from(document.querySelectorAll('.portfolio-item img'));
+      const hiddenImgs  = Array.from(document.querySelectorAll('#gallery-extras [data-gallery-src]'));
+
+      const gallery = [
+        ...visibleImgs.map(img => ({ src: img.src, alt: img.alt })),
+        ...hiddenImgs.map(img => ({ src: img.dataset.gallerySrc, alt: img.dataset.galleryAlt }))
+      ];
+
+      const lb      = document.getElementById('portfolio-lightbox');
+      const lbImg   = document.getElementById('plb-img');
+      const lbCount = document.getElementById('plb-counter');
+      let current   = 0;
+
+      function open(index) {
+        current = index;
+        lbImg.src = gallery[current].src;
+        lbImg.alt = gallery[current].alt;
+        lbCount.textContent = (current + 1) + ' / ' + gallery.length;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+      function prev() {
+        current = (current - 1 + gallery.length) % gallery.length;
+        lbImg.src = gallery[current].src;
+        lbImg.alt = gallery[current].alt;
+        lbCount.textContent = (current + 1) + ' / ' + gallery.length;
+      }
+      function next() {
+        current = (current + 1) % gallery.length;
+        lbImg.src = gallery[current].src;
+        lbImg.alt = gallery[current].alt;
+        lbCount.textContent = (current + 1) + ' / ' + gallery.length;
+      }
+
+      visibleImgs.forEach((img, i) => img.closest('.portfolio-item').addEventListener('click', () => open(i)));
+      document.getElementById('plb-close').addEventListener('click', close);
+      document.getElementById('plb-prev').addEventListener('click', prev);
+      document.getElementById('plb-next').addEventListener('click', next);
+      lb.addEventListener('click', e => { if (e.target === lb) close(); });
+      document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   prev();
+        if (e.key === 'ArrowRight')  next();
+      });
+    })();
+  </script>
+
   <div id="tweaks-root"></div>
 
   <script type="text/babel">
