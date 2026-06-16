@@ -325,16 +325,20 @@
     </div>
     <div class="grid2">
       <div class="field"><label>LinkedIn URL</label><input id="cLinkedin" placeholder="https://linkedin.com/in/…" /></div>
+      <div class="field"><label>Role / Job title</label><input id="cRole" placeholder="e.g. Marketing Director" /></div>
+    </div>
+    <div class="grid2">
       <div class="field"><label>Source</label>
         <select id="cSource">
           <option>Website</option><option>Referral</option><option>Instagram</option>
           <option>LinkedIn</option><option>WhatsApp</option><option>Event</option><option>Cold outreach</option><option>Other</option>
         </select>
       </div>
+      <div class="field"><label>Stage</label><select id="cStage"></select></div>
     </div>
     <div class="grid2">
-      <div class="field"><label>Stage</label><select id="cStage"></select></div>
       <div class="field"><label>Deal value (AED)</label><input id="cValue" type="number" placeholder="0" /></div>
+      <div class="field"><label>Lead source note</label><input id="cSourceNote" placeholder="e.g. Met at GITEX, intro by Ahmed" /></div>
     </div>
     <div class="field"><label>Notes</label><textarea id="cNotes" rows="3" placeholder="Project type, budget, deadlines…"></textarea></div>
     <div class="modal-actions">
@@ -684,13 +688,13 @@ function openContact(id){
     const c=data.contacts.find(x=>x.id===id);
     document.getElementById('cmTitle').textContent="Edit Lead";
     cId.value=c.id; cName.value=c.name; cCompany.value=c.company||''; cEmail.value=c.email||'';
-    cPhone.value=c.phone||''; cLinkedin.value=c.linkedin||''; cSource.value=c.source||'Website';
-    cStage.value=c.stage; cValue.value=c.value||''; cNotes.value=c.notes||'';
+    cPhone.value=c.phone||''; cLinkedin.value=c.linkedin||''; cRole.value=c.role||''; cSource.value=c.source||'Website';
+    cSourceNote.value=c.sourceNote||''; cStage.value=c.stage; cValue.value=c.value||''; cNotes.value=c.notes||'';
     document.getElementById('cDelete').style.display='inline-block';
   } else {
     document.getElementById('cmTitle').textContent="New Lead";
     cId.value=''; cName.value=''; cCompany.value=''; cEmail.value=''; cPhone.value='';
-    cLinkedin.value=''; cSource.value='Website'; cStage.value='New'; cValue.value=''; cNotes.value='';
+    cLinkedin.value=''; cRole.value=''; cSource.value='Website'; cSourceNote.value=''; cStage.value='New'; cValue.value=''; cNotes.value='';
     document.getElementById('cDelete').style.display='none';
   }
   m.classList.add('open');
@@ -702,13 +706,14 @@ function saveContact(){
     const c=data.contacts.find(x=>x.id===cId.value);
     const prevStage=c.stage;
     Object.assign(c,{name:cName.value.trim(),company:cCompany.value.trim(),email:cEmail.value.trim(),
-      phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),source:cSource.value,stage:cStage.value,
-      value:cValue.value,notes:cNotes.value,updatedAt:now});
+      phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),role:cRole.value.trim(),source:cSource.value,
+      sourceNote:cSourceNote.value.trim(),stage:cStage.value,value:cValue.value,notes:cNotes.value,updatedAt:now});
     if(prevStage!==c.stage) onStageChange(c,prevStage);
   } else {
     data.contacts.push({id:uid(),name:cName.value.trim(),company:cCompany.value.trim(),email:cEmail.value.trim(),
-      phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),source:cSource.value,stage:cStage.value,
-      value:cValue.value,notes:cNotes.value,createdAt:now,updatedAt:now,interactions:[],followUps:[]});
+      phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),role:cRole.value.trim(),source:cSource.value,
+      sourceNote:cSourceNote.value.trim(),stage:cStage.value,value:cValue.value,notes:cNotes.value,
+      createdAt:now,updatedAt:now,interactions:[],followUps:[]});
     toast("Lead added");
   }
   save(); closeModal('contactModal'); refreshAll();
@@ -746,16 +751,19 @@ function openDetail(id){
     <div class="detail-head">
       <div class="info">
         <div class="nm">${esc(c.name)}</div>
-        <div class="co2">${esc(c.company||'')} ${c.source?'· '+esc(c.source):''}</div>
+        <div class="co2">${esc(c.role?c.role+(c.company?', ':''):'')}${esc(c.company||'')} ${c.source?'· '+esc(c.source):''}</div>
       </div>
       ${chanButtons(c)}
       <button class="btn sm ghost" onclick="openContact('${c.id}')">Edit</button>
     </div>
     <div class="field"><label>Stage</label><div class="seg">${stageSeg}</div></div>
     <div class="kv">
+      ${c.role?`<div class="k">Role</div><div>${esc(c.role)}</div>`:''}
       ${c.email?`<div class="k">Email</div><div>${esc(c.email)}</div>`:''}
       ${c.phone?`<div class="k">Phone</div><div>${esc(c.phone)}</div>`:''}
       ${c.linkedin?`<div class="k">LinkedIn</div><div><a href="${esc(c.linkedin)}" target="_blank" style="color:var(--green-bright)">View profile ↗</a></div>`:''}
+      ${c.source?`<div class="k">Source</div><div>${esc(c.source)}</div>`:''}
+      ${c.sourceNote?`<div class="k">Lead source note</div><div>${esc(c.sourceNote)}</div>`:''}
       <div class="k">Deal value</div><div>${money(c.value)}</div>
       ${c.notes?`<div class="k">Notes</div><div>${esc(c.notes)}</div>`:''}
     </div>
