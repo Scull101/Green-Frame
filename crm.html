@@ -226,6 +226,8 @@
   <button class="btn ghost sm" onclick="exportData()">Backup</button>
   <button class="btn ghost sm" onclick="document.getElementById('importFile').click()">Restore</button>
   <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)" />
+  <button class="btn ghost sm" onclick="document.getElementById('csvFile').click()">Import CSV</button>
+  <input type="file" id="csvFile" accept=".csv,text/csv" style="display:none" onchange="importCSV(event)" />
   <button class="btn ghost sm" id="lockBtn" style="display:none" onclick="lockNow()">&#128274; Lock</button>
   <button class="btn primary" onclick="openContact()">+ New Lead</button>
 </header>
@@ -331,7 +333,8 @@
       <div class="field"><label>Source</label>
         <select id="cSource">
           <option>Website</option><option>Referral</option><option>Instagram</option>
-          <option>LinkedIn</option><option>WhatsApp</option><option>Event</option><option>Cold outreach</option><option>Other</option>
+          <option>LinkedIn</option><option>WhatsApp</option><option>Event</option><option>Networking</option>
+          <option>Word of mouth</option><option>Existing client</option><option>Cold outreach</option><option>Other</option>
         </select>
       </div>
       <div class="field"><label>Stage</label><select id="cStage"></select></div>
@@ -339,6 +342,18 @@
     <div class="grid2">
       <div class="field"><label>Deal value (AED)</label><input id="cValue" type="number" placeholder="0" /></div>
       <div class="field"><label>Lead source note</label><input id="cSourceNote" placeholder="e.g. Met at GITEX, intro by Ahmed" /></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Industry</label><input id="cIndustry" placeholder="e.g. Real Estate, PR Agency" /></div>
+      <div class="field"><label>Service</label><input id="cService" placeholder="e.g. Photo & Video" /></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Country</label><input id="cCountry" placeholder="e.g. UAE" /></div>
+      <div class="field"><label>Client type</label>
+        <select id="cClientType">
+          <option value="">—</option><option>B2A (Agency)</option><option>B2B (Business)</option><option>B2C (Consumer)</option>
+        </select>
+      </div>
     </div>
     <div class="field"><label>Notes</label><textarea id="cNotes" rows="3" placeholder="Project type, budget, deadlines…"></textarea></div>
     <div class="modal-actions">
@@ -690,11 +705,13 @@ function openContact(id){
     cId.value=c.id; cName.value=c.name; cCompany.value=c.company||''; cEmail.value=c.email||'';
     cPhone.value=c.phone||''; cLinkedin.value=c.linkedin||''; cRole.value=c.role||''; cSource.value=c.source||'Website';
     cSourceNote.value=c.sourceNote||''; cStage.value=c.stage; cValue.value=c.value||''; cNotes.value=c.notes||'';
+    cIndustry.value=c.industry||''; cService.value=c.service||''; cCountry.value=c.country||''; cClientType.value=c.clientType||'';
     document.getElementById('cDelete').style.display='inline-block';
   } else {
     document.getElementById('cmTitle').textContent="New Lead";
     cId.value=''; cName.value=''; cCompany.value=''; cEmail.value=''; cPhone.value='';
     cLinkedin.value=''; cRole.value=''; cSource.value='Website'; cSourceNote.value=''; cStage.value='New'; cValue.value=''; cNotes.value='';
+    cIndustry.value=''; cService.value=''; cCountry.value=''; cClientType.value='';
     document.getElementById('cDelete').style.display='none';
   }
   m.classList.add('open');
@@ -707,12 +724,14 @@ function saveContact(){
     const prevStage=c.stage;
     Object.assign(c,{name:cName.value.trim(),company:cCompany.value.trim(),email:cEmail.value.trim(),
       phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),role:cRole.value.trim(),source:cSource.value,
-      sourceNote:cSourceNote.value.trim(),stage:cStage.value,value:cValue.value,notes:cNotes.value,updatedAt:now});
+      sourceNote:cSourceNote.value.trim(),stage:cStage.value,value:cValue.value,notes:cNotes.value,
+      industry:cIndustry.value.trim(),service:cService.value.trim(),country:cCountry.value.trim(),clientType:cClientType.value,updatedAt:now});
     if(prevStage!==c.stage) onStageChange(c,prevStage);
   } else {
     data.contacts.push({id:uid(),name:cName.value.trim(),company:cCompany.value.trim(),email:cEmail.value.trim(),
       phone:cPhone.value.trim(),linkedin:cLinkedin.value.trim(),role:cRole.value.trim(),source:cSource.value,
       sourceNote:cSourceNote.value.trim(),stage:cStage.value,value:cValue.value,notes:cNotes.value,
+      industry:cIndustry.value.trim(),service:cService.value.trim(),country:cCountry.value.trim(),clientType:cClientType.value,
       createdAt:now,updatedAt:now,interactions:[],followUps:[]});
     toast("Lead added");
   }
@@ -764,6 +783,10 @@ function openDetail(id){
       ${c.linkedin?`<div class="k">LinkedIn</div><div><a href="${esc(c.linkedin)}" target="_blank" style="color:var(--green-bright)">View profile ↗</a></div>`:''}
       ${c.source?`<div class="k">Source</div><div>${esc(c.source)}</div>`:''}
       ${c.sourceNote?`<div class="k">Lead source note</div><div>${esc(c.sourceNote)}</div>`:''}
+      ${c.industry?`<div class="k">Industry</div><div>${esc(c.industry)}</div>`:''}
+      ${c.service?`<div class="k">Service</div><div>${esc(c.service)}</div>`:''}
+      ${c.country?`<div class="k">Country</div><div>${esc(c.country)}</div>`:''}
+      ${c.clientType?`<div class="k">Client type</div><div>${esc(c.clientType)}</div>`:''}
       <div class="k">Deal value</div><div>${money(c.value)}</div>
       ${c.notes?`<div class="k">Notes</div><div>${esc(c.notes)}</div>`:''}
     </div>
@@ -906,6 +929,57 @@ function importData(e){
     data={contacts:d.contacts||[],templates:d.templates||defaultTemplates(),settings:d.settings||{me:''}};
     save(); refreshAll(); toast("Backup restored");
   }catch(err){ toast("Invalid backup file"); } };
+  r.readAsText(file); e.target.value='';
+}
+
+/* ---------- CSV import (appends; skips duplicates by name+company) ---------- */
+function parseCSV(text){
+  const rows=[]; let row=[], field='', i=0, inQ=false;
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  while(i<text.length){
+    const ch=text[i];
+    if(inQ){
+      if(ch==='"'){ if(text[i+1]==='"'){ field+='"'; i+=2; continue; } inQ=false; i++; continue; }
+      field+=ch; i++; continue;
+    }
+    if(ch==='"'){ inQ=true; i++; continue; }
+    if(ch===','){ row.push(field); field=''; i++; continue; }
+    if(ch==='\n'){ row.push(field); rows.push(row); row=[]; field=''; i++; continue; }
+    field+=ch; i++;
+  }
+  if(field!==''||row.length){ row.push(field); rows.push(row); }
+  return rows;
+}
+function importCSV(e){
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const rows=parseCSV(r.result).filter(rw=>rw.some(c=>c.trim()!==''));
+      if(rows.length<2) throw 0;
+      const headers=rows[0].map(h=>h.trim().toLowerCase());
+      const get=(rw,key)=>{ const k=headers.indexOf(key); return k>=0?(rw[k]||'').trim():''; };
+      if(headers.indexOf('name')<0){ toast("CSV needs a 'name' column"); return; }
+      const existing=new Set(data.contacts.map(c=>(c.name||'').toLowerCase()+'|'+(c.company||'').toLowerCase()));
+      const now=new Date().toISOString();
+      let added=0, skipped=0;
+      rows.slice(1).forEach(rw=>{
+        const nm=get(rw,'name'); if(!nm) return;
+        const co=get(rw,'company');
+        const key=nm.toLowerCase()+'|'+co.toLowerCase();
+        if(existing.has(key)){ skipped++; return; }
+        let stage=get(rw,'stage'); if(!STAGES.includes(stage)) stage='New';
+        data.contacts.push({id:uid(),name:nm,company:co,role:get(rw,'role'),email:get(rw,'email'),
+          phone:get(rw,'phone'),linkedin:get(rw,'linkedin'),source:get(rw,'source'),sourceNote:get(rw,'sourcenote'),
+          stage:stage,value:get(rw,'value'),notes:get(rw,'notes'),industry:get(rw,'industry'),
+          country:get(rw,'country'),service:get(rw,'service'),clientType:get(rw,'clienttype'),
+          createdAt:now,updatedAt:now,interactions:[],followUps:[]});
+        existing.add(key); added++;
+      });
+      save(); refreshAll();
+      toast('Imported '+added+' contact'+(added===1?'':'s')+(skipped?' · '+skipped+' duplicate'+(skipped===1?'':'s')+' skipped':''));
+    }catch(err){ toast("Could not read CSV"); }
+  };
   r.readAsText(file); e.target.value='';
 }
 
