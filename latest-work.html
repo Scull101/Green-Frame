@@ -106,6 +106,21 @@
     }
     .nav-cta:hover { background: var(--green-light) !important; }
     nav.scrolled .nav-cta { color: #FFFEF3 !important; }
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%);
+      background: #FFFEF3; border-radius: 4px; box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+      min-width: 260px; padding: 10px; list-style: none; display: none; flex-direction: column; gap: 2px;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu { display: flex; }
+    .nav-dropdown-menu li a {
+      display: block; padding: 10px 14px; color: var(--green) !important;
+      font-size: 13px; letter-spacing: 0.04em; text-transform: none; border-radius: 3px;
+    }
+    .nav-dropdown-menu li a:hover { background: rgba(15,56,60,0.08); }
+    .mobile-submenu { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+    .mobile-submenu a { font-size: 20px; font-weight: 600; color: rgba(240,237,232,0.6); }
     .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
     .nav-burger span { display: block; width: 24px; height: 2px; background: var(--text); transition: all 0.3s; }
     .mobile-menu {
@@ -362,8 +377,18 @@
     <a href="index.html" class="nav-logo" aria-label="Green Frame home"><span>GREEN</span> FRAME</a>
     <ul class="nav-links">
       <li><a href="index.html#about">About</a></li>
-      <li><a href="index.html#services">Services</a></li>
+      <li class="nav-dropdown">
+        <a href="index.html#services">Services</a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="/services/brand-films-abu-dhabi.html">Brand Films</a></li>
+          <li><a href="/services/commercial-video-production-uae.html">Commercial Video Production</a></li>
+          <li><a href="/services/commercial-photography-abu-dhabi.html">Commercial Photography</a></li>
+          <li><a href="/services/social-media-content-uae.html">Social Media Content</a></li>
+          <li><a href="/services/event-photography-videography-abu-dhabi.html">Event Photography &amp; Videography</a></li>
+        </ul>
+      </li>
       <li><a href="index.html#products">Packages</a></li>
+      <li><a href="/case-studies/">Case Studies</a></li>
       <li><a href="latest-work.html" class="active">Latest Work</a></li>
       <li><a href="index.html#contact" class="nav-cta nav-cta-desktop">Get in Touch</a></li>
     </ul>
@@ -377,7 +402,15 @@
     <button class="mobile-close" id="mobile-close" aria-label="Close menu">&times;</button>
     <a href="index.html#about" class="mobile-link">About</a>
     <a href="index.html#services" class="mobile-link">Services</a>
+    <div class="mobile-submenu">
+      <a href="/services/brand-films-abu-dhabi.html" class="mobile-link">Brand Films</a>
+      <a href="/services/commercial-video-production-uae.html" class="mobile-link">Commercial Video</a>
+      <a href="/services/commercial-photography-abu-dhabi.html" class="mobile-link">Photography</a>
+      <a href="/services/social-media-content-uae.html" class="mobile-link">Social Content</a>
+      <a href="/services/event-photography-videography-abu-dhabi.html" class="mobile-link">Live Events</a>
+    </div>
     <a href="index.html#products" class="mobile-link">Packages</a>
+    <a href="/case-studies/" class="mobile-link">Case Studies</a>
     <a href="latest-work.html" class="mobile-link">Latest Work</a>
     <a href="index.html#contact" class="mobile-link">Contact</a>
   </div>
@@ -519,10 +552,11 @@
         <div>
           <div class="footer-col-title">Services</div>
           <ul class="footer-links">
-            <li><a href="index.html#services">Brand Films</a></li>
-            <li><a href="index.html#services">Commercial Video</a></li>
-            <li><a href="index.html#services">Photography</a></li>
-            <li><a href="index.html#services">Social Content</a></li>
+            <li><a href="/services/brand-films-abu-dhabi.html">Brand Films</a></li>
+            <li><a href="/services/commercial-video-production-uae.html">Commercial Video</a></li>
+            <li><a href="/services/commercial-photography-abu-dhabi.html">Photography</a></li>
+            <li><a href="/services/social-media-content-uae.html">Social Content</a></li>
+            <li><a href="/services/event-photography-videography-abu-dhabi.html">Live Events</a></li>
           </ul>
         </div>
         <div>
@@ -530,6 +564,7 @@
           <ul class="footer-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="index.html#about">About</a></li>
+            <li><a href="/case-studies/">Case Studies</a></li>
             <li><a href="latest-work.html">Latest Work</a></li>
             <li><a href="index.html#contact">Contact</a></li>
           </ul>
