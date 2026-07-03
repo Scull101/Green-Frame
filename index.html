@@ -248,6 +248,43 @@
     .nav-cta:hover { background: var(--green-light) !important; color: var(--text) !important; }
     nav.scrolled .nav-cta { color: #FFFEF3 !important; }
 
+    /* nav dropdown (Services) */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 18px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #FFFEF3;
+      border-radius: 4px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+      min-width: 260px;
+      padding: 10px;
+      list-style: none;
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-dropdown:hover .nav-dropdown-menu,
+    .nav-dropdown:focus-within .nav-dropdown-menu { display: flex; }
+    .nav-dropdown-menu li a {
+      display: block;
+      padding: 10px 14px;
+      color: var(--green) !important;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      border-radius: 3px;
+    }
+    .nav-dropdown-menu li a:hover { background: rgba(15,56,60,0.08); }
+    .mobile-submenu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+    .mobile-submenu a { font-size: 20px; font-weight: 600; color: var(--muted); }
+
     /* hamburger */
     .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
     .nav-burger span { display: block; width: 24px; height: 2px; background: var(--text); transition: all 0.3s; }
@@ -740,6 +777,17 @@
       line-height: 1.7;
       color: var(--muted);
     }
+    .service-learn-more {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green-bright);
+      text-decoration: none;
+    }
+    .service-learn-more:hover { color: var(--text); }
 
     /* ── PRODUCTS ── */
     #products { background: var(--dark); }
@@ -1303,8 +1351,18 @@
     <a href="#" class="nav-logo" aria-label="Green Frame home"><span>GREEN</span> FRAME</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
+      <li class="nav-dropdown">
+        <a href="#services">Services</a>
+        <ul class="nav-dropdown-menu">
+          <li><a href="/services/brand-films-abu-dhabi.html">Brand Films</a></li>
+          <li><a href="/services/commercial-video-production-uae.html">Commercial Video Production</a></li>
+          <li><a href="/services/commercial-photography-abu-dhabi.html">Commercial Photography</a></li>
+          <li><a href="/services/social-media-content-uae.html">Social Media Content</a></li>
+          <li><a href="/services/event-photography-videography-abu-dhabi.html">Event Photography &amp; Videography</a></li>
+        </ul>
+      </li>
       <li><a href="#products">Packages</a></li>
+      <li><a href="/case-studies/">Case Studies</a></li>
       <li><a href="latest-work.html">Latest Work</a></li>
       <li><a href="#contact" class="nav-cta nav-cta-desktop">Get in Touch</a></li>
     </ul>
@@ -1318,7 +1376,15 @@
     <button class="mobile-close" id="mobile-close" aria-label="Close menu">&times;</button>
     <a href="#about" class="mobile-link">About</a>
     <a href="#services" class="mobile-link">Services</a>
+    <div class="mobile-submenu">
+      <a href="/services/brand-films-abu-dhabi.html" class="mobile-link">Brand Films</a>
+      <a href="/services/commercial-video-production-uae.html" class="mobile-link">Commercial Video</a>
+      <a href="/services/commercial-photography-abu-dhabi.html" class="mobile-link">Photography</a>
+      <a href="/services/social-media-content-uae.html" class="mobile-link">Social Content</a>
+      <a href="/services/event-photography-videography-abu-dhabi.html" class="mobile-link">Live Events</a>
+    </div>
     <a href="#products" class="mobile-link">Packages</a>
+    <a href="/case-studies/" class="mobile-link">Case Studies</a>
     <a href="latest-work.html" class="mobile-link">Latest Work</a>
     <a href="#contact" class="mobile-link">Contact</a>
   </div>
@@ -1531,26 +1597,31 @@
           <div class="service-number">01</div>
           <h3 class="service-name">Brand Films</h3>
           <p class="service-desc">Cinematic storytelling that captures your brand's essence and communicates your values with impact.</p>
+          <a href="/services/brand-films-abu-dhabi.html" class="service-learn-more">Learn more &rarr;</a>
         </div>
         <div class="service-card fade-up fade-up-delay-1">
           <div class="service-number">02</div>
           <h3 class="service-name">Commercial Video</h3>
           <p class="service-desc">High-production campaigns for product launches, advertising, and corporate communications.</p>
+          <a href="/services/commercial-video-production-uae.html" class="service-learn-more">Learn more &rarr;</a>
         </div>
         <div class="service-card fade-up fade-up-delay-2">
           <div class="service-number">03</div>
           <h3 class="service-name">Photography</h3>
           <p class="service-desc">Campaign, lifestyle, product, and architectural photography built for web, print, and social.</p>
+          <a href="/services/commercial-photography-abu-dhabi.html" class="service-learn-more">Learn more &rarr;</a>
         </div>
         <div class="service-card fade-up fade-up-delay-3">
           <div class="service-number" style="margin: 0px 0px 10px">04</div>
           <h3 class="service-name">Social Content</h3>
           <p class="service-desc">Platform-native content: reels, shorts, carousels, designed to grow presence and drive engagement.</p>
+          <a href="/services/social-media-content-uae.html" class="service-learn-more">Learn more &rarr;</a>
         </div>
         <div class="service-card fade-up fade-up-delay-4">
           <div class="service-number">05</div>
           <h3 class="service-name">Live Events</h3>
           <p class="service-desc">Full event coverage from corporate conferences to product launches, captured and delivered with precision.</p>
+          <a href="/services/event-photography-videography-abu-dhabi.html" class="service-learn-more">Learn more &rarr;</a>
         </div>
       </div>
     </div>
@@ -1783,11 +1854,11 @@
         <div>
           <div class="footer-col-title">Services</div>
           <ul class="footer-links">
-            <li><a href="#services">Brand Films</a></li>
-            <li><a href="#services">Commercial Video</a></li>
-            <li><a href="#services">Photography</a></li>
-            <li><a href="#services">Social Content</a></li>
-            <li><a href="#services">Live Events</a></li>
+            <li><a href="/services/brand-films-abu-dhabi.html">Brand Films</a></li>
+            <li><a href="/services/commercial-video-production-uae.html">Commercial Video</a></li>
+            <li><a href="/services/commercial-photography-abu-dhabi.html">Photography</a></li>
+            <li><a href="/services/social-media-content-uae.html">Social Content</a></li>
+            <li><a href="/services/event-photography-videography-abu-dhabi.html">Live Events</a></li>
           </ul>
         </div>
         <div>
@@ -1806,6 +1877,7 @@
             <li><a href="tel:+971585243129">+971 58 524 3129</a></li>
             <li><a href="https://www.greenframe.ae">www.greenframe.ae</a></li>
             <li><a href="#contact">Free Consultation</a></li>
+            <li><a href="/case-studies/">Case Studies</a></li>
           </ul>
           <div class="footer-social-icons">
             <a href="https://www.instagram.com/green_frame_uae/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-icon-btn">
