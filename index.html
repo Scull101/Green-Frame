@@ -166,11 +166,10 @@
   }
   </script>
 
-  <!-- React + Babel for Tweaks panel -->
+  <!-- React for Tweaks panel (tweaks-panel.js is precompiled from tweaks-panel.jsx — no in-browser Babel) -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script src="tweaks-panel.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -2031,7 +2030,10 @@
 
   <div id="tweaks-root"></div>
 
-  <script type="text/babel">
+  <script>
+    // Compiled from JSX (Babel, preset "react") so this doesn't need @babel/standalone
+    // in production. Edit via the Tweaks panel itself, or hand-edit the EDITMODE block
+    // below directly — just keep it valid JSON between the markers.
     const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
       "navBg": "#FFFEF3",
       "accentColor": "#0d383c",
@@ -2039,11 +2041,9 @@
       "textColor": "#FFFEF3",
       "heroOverlay": 35,
       "tagline": "Content with Purpose"
-    }/*EDITMODE-END*/;
-
+    } /*EDITMODE-END*/;
     function GreenFrameTweaks() {
       const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
-
       React.useEffect(() => {
         document.documentElement.style.setProperty('--nav-bg', tweaks.navBg);
         document.documentElement.style.setProperty('--green', tweaks.accentColor);
@@ -2060,26 +2060,42 @@
         const sub = document.querySelector('.hero-sub');
         if (sub) sub.textContent = tweaks.tagline;
       }, [tweaks]);
-
-      return (
-        <TweaksPanel>
-          <TweakSection label="Navigation">
-            <TweakColor label="Nav bar colour" value={tweaks.navBg} onChange={v => setTweak('navBg', v)} />
-          </TweakSection>
-          <TweakSection label="Brand Colours">
-            <TweakColor label="Accent / Green" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)} />
-            <TweakColor label="Page background" value={tweaks.bodyBg} onChange={v => setTweak('bodyBg', v)} />
-            <TweakColor label="Text colour" value={tweaks.textColor} onChange={v => setTweak('textColor', v)} />
-          </TweakSection>
-          <TweakSection label="Hero">
-            <TweakSlider label="Overlay darkness" value={tweaks.heroOverlay} min={10} max={90} step={5} onChange={v => setTweak('heroOverlay', v)} />
-            <TweakText label="Tagline" value={tweaks.tagline} onChange={v => setTweak('tagline', v)} />
-          </TweakSection>
-        </TweaksPanel>
-      );
+      return /*#__PURE__*/React.createElement(TweaksPanel, null, /*#__PURE__*/React.createElement(TweakSection, {
+        label: "Navigation"
+      }, /*#__PURE__*/React.createElement(TweakColor, {
+        label: "Nav bar colour",
+        value: tweaks.navBg,
+        onChange: v => setTweak('navBg', v)
+      })), /*#__PURE__*/React.createElement(TweakSection, {
+        label: "Brand Colours"
+      }, /*#__PURE__*/React.createElement(TweakColor, {
+        label: "Accent / Green",
+        value: tweaks.accentColor,
+        onChange: v => setTweak('accentColor', v)
+      }), /*#__PURE__*/React.createElement(TweakColor, {
+        label: "Page background",
+        value: tweaks.bodyBg,
+        onChange: v => setTweak('bodyBg', v)
+      }), /*#__PURE__*/React.createElement(TweakColor, {
+        label: "Text colour",
+        value: tweaks.textColor,
+        onChange: v => setTweak('textColor', v)
+      })), /*#__PURE__*/React.createElement(TweakSection, {
+        label: "Hero"
+      }, /*#__PURE__*/React.createElement(TweakSlider, {
+        label: "Overlay darkness",
+        value: tweaks.heroOverlay,
+        min: 10,
+        max: 90,
+        step: 5,
+        onChange: v => setTweak('heroOverlay', v)
+      }), /*#__PURE__*/React.createElement(TweakText, {
+        label: "Tagline",
+        value: tweaks.tagline,
+        onChange: v => setTweak('tagline', v)
+      })));
     }
-
-    ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<GreenFrameTweaks />);
+    ReactDOM.createRoot(document.getElementById('tweaks-root')).render(/*#__PURE__*/React.createElement(GreenFrameTweaks, null));
   </script>
 
 </body>
